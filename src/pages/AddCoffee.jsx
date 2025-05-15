@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 export default function AddCoffee() {
 
@@ -15,7 +16,27 @@ export default function AddCoffee() {
         const details = form.details.value;
 
         const newCoffee = { name, chef, supplier, taste, category, photo, details };
-        console.log(newCoffee);
+
+        fetch("http://localhost:5000/coffee", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify(newCoffee)
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.insertedId) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Coffee Added Successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'Cool'
+                    })
+                }
+                console.log(data);
+                form.reset();
+            })
     }
 
     return (
